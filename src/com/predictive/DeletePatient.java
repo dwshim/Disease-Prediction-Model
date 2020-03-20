@@ -30,15 +30,16 @@ public class DeletePatient extends HttpServlet{
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 String id = request.getParameter("id").toString();
-		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", "");
 			Statement stmt = conn.createStatement();
+			Statement stmt2 = conn.createStatement();
+			int j = stmt2.executeUpdate(
+					"DELETE FROM `patient_data` WHERE patient_id = '" + id + "'");
 			int i = stmt.executeUpdate(
 					"DELETE FROM `patient` WHERE patient_id = '" + id + "'");
-
-			if (i > 0) {
+			if (i > 0 || j >0) {
 				response.sendRedirect("patient.jsp");
 			} else {
 				response.sendRedirect("error.jsp");

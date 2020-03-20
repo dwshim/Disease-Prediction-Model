@@ -13,15 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/AddPatient")
-public class AddPatient extends HttpServlet{
+@WebServlet("/DeleteUser")
+public class DeleteUser extends HttpServlet{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public AddPatient() {
+	public DeleteUser() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -29,7 +29,26 @@ public class AddPatient extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+String id = request.getParameter("id").toString();
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", "");
+			Statement stmt = conn.createStatement();
+			int i = stmt.executeUpdate(
+					"DELETE FROM `user` WHERE employee_id = '" + id + "'");
+
+			if (i > 0) {
+				response.sendRedirect("usermanagement.jsp");
+			} else {
+				response.sendRedirect("error.jsp");
+			}
+			conn.close();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -39,31 +58,7 @@ public class AddPatient extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
 
-		String first = request.getParameter("first");
-		String last = request.getParameter("last");
-		String address = request.getParameter("address");
-		String department = request.getParameter("department");
-		String prescription = request.getParameter("prescription");
-
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", "");
-			Statement stmt = conn.createStatement();
-			int i = stmt.executeUpdate(
-					"INSERT INTO `patient`(`patient_firstname`, `patient_lastname`, `address`, `department`, `prescription`) VALUES ('"
-							+ first + "','" + last + "','" + address + "','" + department + "','" + prescription
-							+ "')");
-			if (i > 0) {
-				response.sendRedirect("patient.jsp");
-			} else {
-				response.sendRedirect("error.jsp");
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
 	}
 }

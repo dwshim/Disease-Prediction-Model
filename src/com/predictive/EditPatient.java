@@ -1,8 +1,8 @@
 package com.predictive;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -11,17 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet("/AddPatient")
-public class AddPatient extends HttpServlet{
-	
-	/**
-	 * 
-	 */
+@WebServlet("/EditPatient")
+public class EditPatient extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
-	public AddPatient() {
+	public EditPatient() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -41,20 +36,24 @@ public class AddPatient extends HttpServlet{
 		// TODO Auto-generated method stub
 		doGet(request, response);
 
-		String first = request.getParameter("first");
-		String last = request.getParameter("last");
+		String firstname = request.getParameter("firstname");
+		String lastname = request.getParameter("lastname");
 		String address = request.getParameter("address");
 		String department = request.getParameter("department");
 		String prescription = request.getParameter("prescription");
+		String id = request.getParameter("patientid");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", "");
 			Statement stmt = conn.createStatement();
 			int i = stmt.executeUpdate(
-					"INSERT INTO `patient`(`patient_firstname`, `patient_lastname`, `address`, `department`, `prescription`) VALUES ('"
-							+ first + "','" + last + "','" + address + "','" + department + "','" + prescription
-							+ "')");
+					"UPDATE `patient` SET `patient_firstname` = '" + firstname + "'" + "," 
+			+ "`patient_lastname` = '" + lastname + "'" + "," 
+							+ "`address` = '" + address + "'" + "," 
+			+ "`department` = '" + department + "'" + "," 
+							+ "`prescription` = '" + prescription + "'" 
+			+ "WHERE patient_id='" + id +"'");
 			if (i > 0) {
 				response.sendRedirect("patient.jsp");
 			} else {

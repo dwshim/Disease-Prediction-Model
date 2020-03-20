@@ -15,4 +15,54 @@
 	<url-pattern>/addpatient</url-pattern>
 </servlet-mapping>
 
+<servlet>
+	<servlet-name>updateuser</servlet-name>
+	<servlet-class>com.predictive.EditEmployee</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>updateuser</servlet-name>
+	<url-pattern>/updateuser</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>updatepatient</servlet-name>
+	<servlet-class>com.predictive.EditPatient</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>updatepatient</servlet-name>
+	<url-pattern>/updatepatient</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>update</servlet-name>
+	<servlet-class>com.predictive.EditData</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>update</servlet-name>
+	<url-pattern>/update</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>deleteuser</servlet-name>
+	<servlet-class>com.predictive.DeleteUser</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>deleteuser</servlet-name>
+	<url-pattern>/deleteuser</url-pattern>
+</servlet-mapping>
+
+<servlet>
+	<servlet-name>adduser</servlet-name>
+	<servlet-class>com.predictive.AddUser</servlet-class>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>adduser</servlet-name>
+	<url-pattern>/addemployee</url-pattern>
+</servlet-mapping>
+
 </web-app>

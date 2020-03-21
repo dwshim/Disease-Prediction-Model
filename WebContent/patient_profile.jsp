@@ -31,112 +31,78 @@
 		}
 	%>
 	<div class="d-flex" id="wrapper">
-
 		<!-- Sidebar -->
-		<div class="bg-light border-right" id="sidebar-wrapper">
-			<div class="sidebar-heading">Sweet Hospital</div>
-			<div class="list-group list-group-flush">
-				<a href="#" class="list-group-item list-group-item-action bg-light">Profile</a>
-				<a href="predictor.jsp"
-					class="list-group-item list-group-item-action bg-light">Predictor</a>
-				<%
-					String role = (String) session.getAttribute("role");
-					if (role.equals("admin")) {
-				%>
-				<a href="patient.jsp"
-					class="list-group-item list-group-item-action bg-light">Patient
-					List</a>
-				<%
-					}
-				%>
-				<a href="#" class="list-group-item list-group-item-action bg-light">Settings</a>
-				<a href="logout.jsp"
-					class="list-group-item list-group-item-action bg-light">Logout</a>
-			</div>
-		</div>
+		<%@ include file="template.jsp"%>
 		<!-- /#sidebar-wrapper -->
 
 		<!-- Page Content -->
 		<div id="page-content-wrapper">
+			<%
+				try {
+					Class.forName(driverName);
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 
-			<nav
-				class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+				Connection connection = null;
+				Statement statement = null;
+				ResultSet resultSet = null;
+				ResultSet resultSet2 = null;
+				int i = 1;
 
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-						<li class="nav-item active"><a class="nav-link" href="#">Hello,
-						</a></li>
-						<li class="nav-item"><a class="nav-link" href="#"> <%
- 	out.print(name);
- %>
-						</a></li>
-						<li class="nav-item dropdown">
-							<div class="dropdown-menu dropdown-menu-right"
-								aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Action</a> <a
-									class="dropdown-item" href="#">Another action</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Something else here</a>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</nav>
-
-			<div class="container-fluid">
-				<%
-					try {
-						Class.forName(driverName);
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					}
-
-					Connection connection = null;
-					Statement statement = null;
-					ResultSet resultSet = null;
-					int i = 1;
-
-					try {
-						connection = DriverManager.getConnection(connectionUrl + dbName, userId, password);
-						statement = connection.createStatement();
-						String sql = "SELECT * FROM patient WHERE patient_id = '" + id + "'";
-
+				try {
+					connection = DriverManager.getConnection(connectionUrl + dbName, userId, password);
+					statement = connection.createStatement();
+					String sql = "SELECT patient_data.patient_id, patient.patient_id, patient.patient_firstname, patient.patient_lastname, patient_data.bmi, patient_data.glucose, patient_data.bloodp, patient_data.pedigree, patient_data.pregnancies"
+							+ " FROM patient_data INNER JOIN patient ON patient_data.patient_id = patient.patient_id WHERE patient_data.patient_id = "
+							+ request.getParameter("id");
+					resultSet = statement.executeQuery(sql);
+					if(!resultSet.first()){
+						Statement statement2 = null;
+						statement2 = connection.createStatement();
+						String sql2 = "INSERT INTO patient_data (`patient_id`, `bmi`, `glucose`, `bloodp`, `pregnancies`, `pedigree`) VALUES ("+ request.getParameter("id") + ", 0,0,0,0,0)";
+						int f = statement2.executeUpdate(sql2);
 						resultSet = statement.executeQuery(sql);
-						while (resultSet.next()) {
-				%>
-				<h3 class="mt-4">
-					Health Data for patient:
-					<%= resultSet.getString("patient_firstname")%></h1>
-				<%
 					}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				%>
-				<form method="POST" action="AddData">
-					<div class="form-group">
-						<input type="text" class="form-control" id="bmi" name="bmi"
-							placeholder="BMI" required>
-					</div>
+			%>
+			<div class="container-fluid">
+				<h1 class="mt-4">
+					Patient Name:
+					<%=resultSet.getString("patient_firstname")%>
+					<%=resultSet.getString("patient_lastname")%></h1>
+				<form method="POST"
+					action="edithealthdata.jsp?id=<%=resultSet.getString("patient_id")%>">
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">BMI</th>
+								<th scope="col">Glucose Level</th>
+								<th scope="col">Blood Pressure</th>
+								<th scope="col">Pregnancies</th>
+								<th scope="col">Pedigree</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
 
-					<div class="form-group">
-						<input type="text" class="form-control" name="glucose"
-							id="glucose" placeholder="Glucose" required>
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" id="bp" name="bp"
-							placeholder="Blood Pressure" required>
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" id="pregnancies"
-							name="pregnancies" placeholder="Pregnancies" required>
-					</div>
-					<div class="form-group">
-						<input type="text" class="form-control" id="pedigree"
-							name="pedigree" placeholder="Pedigree Function" required>
-					</div>
+								<td><%=resultSet.getString("bmi")%></td>
+								<td><%=resultSet.getString("glucose")%></td>
+								<td><%=resultSet.getString("bloodp")%></td>
+								<td><%=resultSet.getString("pregnancies")%></td>
+								<td><%=resultSet.getString("pedigree")%></td>
+							</tr>
+						</tbody>
 
-					<button class="btn btn-primary">Submit</button>
+						<%
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							connection.close();
+						%>
+					</table>
+
+					<button class="btn btn-primary">Edit Data</button>
 				</form>
 			</div>
 		</div>

@@ -17,7 +17,7 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Patient Management</title>
+<title>User Management</title>
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 
@@ -32,7 +32,7 @@
 			response.sendRedirect("login.jsp");
 		}
 	%>
-	<div class="d-flex" id="wrapper">
+<div class="d-flex" id="wrapper">
 
 		<!-- Sidebar -->
 		<%@ include file = "template.jsp" %>
@@ -40,24 +40,14 @@
 
 		<!-- Page Content -->
 			<div class="container-fluid">
-				<h1 class="mt-4">List of Patient</h1>
-				<form method="GET" action="searchresult.jsp">
-					<input type="text"
-							class="form-control" name="searchpatient" id="searchpatient"
-							placeholder="Search by First Name" required>
-							<br>
-							<button class="btn btn-info">Search</button>
-				</form>
-				<br>
+				<h1 class="mt-4">User Management</h1>
 				<table class="table">
 					<thead>
 						<tr>
-							<th scope="col">ID</th>
-							<th scope="col">First Name</th>
-							<th scope="col">Last Name</th>
-							<th scope="col">Address</th>
-							<th scope="col">Department</th>
-							<th scope="col">Prescription</th>
+							<th scope="col">Employee ID</th>
+							<th scope="col">Username</th>
+							<th scope="col">Role</th>
+							<th scope="col">Title</th>
 							<th scope="col">Action</th>
 						</tr>
 					</thead>
@@ -78,20 +68,18 @@
 								try {
 									connection = DriverManager.getConnection(connectionUrl + dbName, userId, password);
 									statement = connection.createStatement();
-									String sql = "SELECT * FROM patient";
+									String sql = "SELECT * FROM user WHERE role != '" + role + "'";
 
 									resultSet = statement.executeQuery(sql);
 									while (resultSet.next()) {
 							%>
 							<th scope="row">
-								<%=resultSet.getString("patient_id")%>
+								<%=resultSet.getString("employee_id")%>
 							</th>
-							<td><a href ='patient_profile.jsp?id=<%=resultSet.getString("patient_id")%>'><%=resultSet.getString("patient_firstname")%></a></td>
-							<td><%=resultSet.getString("patient_lastname")%></td>
-							<td><%=resultSet.getString("address")%></td>
-							<td><%=resultSet.getString("department")%></td>
-							<td><%=resultSet.getString("prescription")%></td>
-							<td><a href='editpatient.jsp?id=<%=resultSet.getString("patient_id")%>'>Edit</a> | <a href='DeletePatient?id=<%=resultSet.getString("patient_id")%>'>Delete</a></td>
+							<td><%=resultSet.getString("username")%></td>
+							<td><%=resultSet.getString("role")%></td>
+							<td><%=resultSet.getString("title")%></td>
+							<td><a href='editemployee.jsp?id=<%=resultSet.getString("employee_id")%>'>Edit</a> | <a href='DeleteUser?id=<%=resultSet.getString("employee_id")%>'>Delete</a></td>
 						</tr>
 					</tbody>
 
@@ -104,7 +92,7 @@
 					%>
 				</table>
 				<div class="container-login100-form-btn">
-					<button class="btn btn-primary" onclick="window.location='addpatient.jsp'">Add Patient</button>
+					<button class="btn btn-primary" onclick="window.location='addemployee.jsp'">Add Employee</button>
 				</div>
 			</div>
 		</div>

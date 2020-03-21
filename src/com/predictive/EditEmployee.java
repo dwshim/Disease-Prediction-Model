@@ -1,8 +1,8 @@
 package com.predictive;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -11,17 +11,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-@WebServlet("/AddPatient")
-public class AddPatient extends HttpServlet{
-	
-	/**
-	 * 
-	 */
+@WebServlet("/EditEmployee")
+public class EditEmployee extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
-	public AddPatient() {
+	public EditEmployee() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -41,22 +36,24 @@ public class AddPatient extends HttpServlet{
 		// TODO Auto-generated method stub
 		doGet(request, response);
 
-		String first = request.getParameter("first");
-		String last = request.getParameter("last");
-		String address = request.getParameter("address");
-		String department = request.getParameter("department");
-		String prescription = request.getParameter("prescription");
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String role = request.getParameter("role");
+		String title = request.getParameter("title");
+		String id = request.getParameter("employeeid");
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", "");
 			Statement stmt = conn.createStatement();
 			int i = stmt.executeUpdate(
-					"INSERT INTO `patient`(`patient_firstname`, `patient_lastname`, `address`, `department`, `prescription`) VALUES ('"
-							+ first + "','" + last + "','" + address + "','" + department + "','" + prescription
-							+ "')");
+					"UPDATE `user` SET `username` = '" + username + "'" + "," 
+			+ "`password` = '" + password + "'" + "," 
+							+ "`role` = '" + role + "'" + "," 
+			+ "`title` = '" + title + "'" 
+			+ "WHERE employee_id='" + id +"'");
 			if (i > 0) {
-				response.sendRedirect("patient.jsp");
+				response.sendRedirect("usermanagement.jsp");
 			} else {
 				response.sendRedirect("error.jsp");
 			}

@@ -17,22 +17,17 @@ public class AddData extends HttpServlet{
 
 	public AddData() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
+	//Developed in iteration 2
+	//Establish connection with mySQL to create new record
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 
 		String bmi = request.getParameter("bmi");

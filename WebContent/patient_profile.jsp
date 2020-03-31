@@ -4,6 +4,7 @@
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
+<%@page import="com.predictive.DatabaseInfo"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -51,7 +52,7 @@
 				int i = 1;
 
 				try {
-					connection = DriverManager.getConnection(connectionUrl + dbName, userId, password);
+					connection = DriverManager.getConnection("jdbc:mysql://" + DatabaseInfo.DB_URL  + "/" + DatabaseInfo.DB_NAME + "", DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS);
 					statement = connection.createStatement();
 					String sql = "SELECT patient_data.patient_id, patient.patient_id, patient.patient_firstname, patient.patient_lastname, patient_data.bmi, patient_data.glucose, patient_data.bloodp, patient_data.pedigree, patient_data.pregnancies"
 							+ " FROM patient_data INNER JOIN patient ON patient_data.patient_id = patient.patient_id WHERE patient_data.patient_id = "

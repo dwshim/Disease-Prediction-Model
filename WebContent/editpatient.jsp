@@ -4,6 +4,7 @@
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
+<%@page import="com.predictive.DatabaseInfo"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,10 +13,6 @@
 <%
 	String id = request.getParameter("id");
 	String driverName = "com.mysql.jdbc.Driver";
-	String connectionUrl = "jdbc:mysql://localhost:3306/";
-	String dbName = "hospital";
-	String userId = "root";
-	String password = "";
 %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,7 +55,7 @@
 					int i = 1;
 
 					try {
-						connection = DriverManager.getConnection(connectionUrl + dbName, userId, password);
+						connection = DriverManager.getConnection("jdbc:mysql://" + DatabaseInfo.DB_URL  + "/" + DatabaseInfo.DB_NAME + "", DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS);
 						statement = connection.createStatement();
 						String sql = "SELECT * FROM `patient` WHERE `patient_id` = '" + request.getParameter("id") + "'";
 
@@ -107,12 +104,11 @@
 
 				<%
 					}
-
+					connection.close();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 
-					connection.close();
 				%>
 			</div>
 		</div>

@@ -4,6 +4,7 @@
 <%@page import="java.sql.ResultSet"%>
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
+<%@page import="com.predictive.DatabaseInfo"%>
 
 <%
 	String id = request.getParameter("userId");
@@ -66,7 +67,7 @@
 								int i = 1;
 
 								try {
-									connection = DriverManager.getConnection(connectionUrl + dbName, userId, password);
+									connection = DriverManager.getConnection("jdbc:mysql://" + DatabaseInfo.DB_URL  + "/" + DatabaseInfo.DB_NAME + "", DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS);
 									statement = connection.createStatement();
 									String sql = "SELECT * FROM user WHERE role != '" + role + "'";
 

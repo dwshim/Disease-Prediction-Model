@@ -38,7 +38,7 @@ public class Login extends HttpServlet {
 
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital", "root", "");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://" + DatabaseInfo.DB_URL + "/" + DatabaseInfo.DB_NAME + "", DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS); 
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(
 					"select username,password,role from user where username='" + name + "' and password='" + pass + "'");
@@ -52,11 +52,16 @@ public class Login extends HttpServlet {
 			} else {
 				response.sendRedirect("error.jsp");
 			}
+			
+			stmt.close();
+			rs.close();
+			conn.close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 }

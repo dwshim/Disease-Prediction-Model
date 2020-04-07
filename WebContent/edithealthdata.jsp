@@ -64,32 +64,32 @@
 				%>
 				<form method="POST" action="update">
 					<div class="form-group">
-					<label for="bmiinput">BMI</label>
+					<label for="bmiinput">Concave Points Mean</label>
 						<input type="text" class="form-control" id="bmi" name="bmi"
 							placeholder="BMI" value="<%=resultSet.getString("bmi")%>"
 							required>
 					</div>
 
 					<div class="form-group">
-					<label for="glucoseinput">Glucose</label>
+					<label for="glucoseinput">Radius Worst</label>
 						<input type="text" class="form-control" name="glucose"
 							id="glucose" placeholder="Glucose"
 							value="<%=resultSet.getString("glucose")%>" required>
 					</div>
 					<div class="form-group">
-					<label for="bpinput">Blood Pressure</label>
+					<label for="bpinput">Perimeter Worst</label>
 						<input type="text" class="form-control" id="bp" name="bp"
 							placeholder="Blood Pressure"
 							value="<%=resultSet.getString("bloodp")%>" required>
 					</div>
 					<div class="form-group">
-					<label for="pregnanciesinput">Pregnancies</label>
+					<label for="pregnanciesinput">Area Worst</label>
 						<input type="text" class="form-control" id="pregnancies"
 							name="pregnancies" placeholder="Pregnancies"
 							value="<%=resultSet.getString("pregnancies")%>" required>
 					</div>
 					<div class="form-group">
-					<label for="pedigreeinput">Pedigree</label>
+					<label for="pedigreeinput">Concave Points Worst</label>
 						<input type="text" class="form-control" id="pedigree"
 							name="pedigree" placeholder="Pedigree"
 							value="<%=resultSet.getString("pedigree")%>" required>

@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="com.predictive.DatabaseInfo"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +20,10 @@
 </head>
 <body>
 	<%
+		String id = request.getParameter("id");
 		String name = (String) session.getAttribute("username");
+		String driverName = "com.mysql.jdbc.Driver";
+		String message = (String) request.getAttribute("result");
 		if (name == null) {
 			response.sendRedirect("login.jsp");
 		}
@@ -23,44 +31,143 @@
 	<div class="d-flex" id="wrapper">
 
 		<!-- Sidebar -->
-		<%@ include file = "template.jsp" %>
+		<%@ include file="template.jsp"%>
 		<!-- /#sidebar-wrapper -->
 
 		<!-- Page Content -->
 		<div id="page-content-wrapper">
 
-
 			<div class="container-fluid">
 				<h1 class="mt-4">Predictor</h1>
+				<%
+					if (id != null) {
+						try {
+							Class.forName(driverName);
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						}
+
+						Connection connection = null;
+						Statement statement = null;
+						ResultSet resultSet = null;
+						int i = 1;
+
+						try {
+							connection = DriverManager.getConnection(
+									"jdbc:mysql://" + DatabaseInfo.DB_URL + "/" + DatabaseInfo.DB_NAME + "",
+									DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS);
+							statement = connection.createStatement();
+							String sql = "SELECT * FROM `patient_data` WHERE `patient_id` = '" + request.getParameter("id")
+									+ "'";
+
+							resultSet = statement.executeQuery(sql);
+							while (resultSet.next()) {
+				%>
 				<form method="POST" action="SendJSON">
 					<div class="form-group">
 						<input type="text" class="form-control" id="bmi" name="bmi"
-							placeholder="BMI" required>
+							placeholder="Concave Points Mean" value="<%=resultSet.getString("bmi")%>"
+							required>
 					</div>
 
 					<div class="form-group">
 						<input type="text" class="form-control" name="glucose"
-							id="glucose" placeholder="Glucose" required>
+							id="glucose" placeholder="Radius Worst"
+							value="<%=resultSet.getString("glucose")%>" required>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" id="bp" name="bp"
-							placeholder="Blood Pressure" required>
+							placeholder="Perimeter Worst"
+							value="<%=resultSet.getString("bloodp")%>" required>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" id="pregnancies"
-							name="pregnancies" placeholder="Pregnancies" required>
+							name="pregnancies" placeholder="Area Worst"
+							value="<%=resultSet.getString("pregnancies")%>" required>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" id="pedigree"
-							name="pedigree" placeholder="Pedigree Function" required>
+							name="pedigree" placeholder="Concave Points Worst"
+							value="<%=resultSet.getString("pedigree")%>" required>
 					</div>
 
 					<div class="form-group">
-						<p>Result:</p>
+						<p>
+							Result:
+
+							<%
+							if(message!=null){
+							if (message.equals("[1]")) {
+											out.print("malignant");
+										} else if (message.equals("[0]")) {
+											out.print("benign");
+										} else {
+											out.print("null");
+										}
+							}
+						%>
+						</p>
 					</div>
 
 					<button class="btn btn-primary">Submit</button>
 				</form>
+
+				<%
+					}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						connection.close();
+					} else {
+				%>
+
+				<form method="POST" action="SendJSON">
+					<div class="form-group">
+						<input type="text" class="form-control" id="bmi" name="bmi"
+							placeholder="Concave Points Mean" required>
+					</div>
+
+					<div class="form-group">
+						<input type="text" class="form-control" name="glucose"
+							id="glucose" placeholder="Radius Worst" required>
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" id="bp" name="bp"
+							placeholder="Perimeter Worst" required>
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" id="pregnancies"
+							name="pregnancies" placeholder="Area Worst" required>
+					</div>
+					<div class="form-group">
+						<input type="text" class="form-control" id="pedigree"
+							name="pedigree" placeholder="Concave Points Worst" required>
+					</div>
+
+					<div class="form-group">
+						<p>
+							Result:
+							<%
+							if (message != null){
+							if (message.equals("[1]")) {
+									out.print("malignant");
+								} else if (message.equals("[0]")) {
+									out.print("benign");
+								} else {
+									out.print("null");
+								}
+							}
+						%>
+						</p>
+					</div>
+
+					<button class="btn btn-primary">Submit</button>
+				</form>
+
+				<%
+					}
+				%>
 			</div>
 		</div>
 		<!-- /#page-content-wrapper -->

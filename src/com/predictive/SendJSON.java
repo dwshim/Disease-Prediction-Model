@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -49,9 +50,10 @@ public class SendJSON extends HttpServlet {
 		String glucose = request.getParameter("glucose");
 		String bp = request.getParameter("bp");
 		String pedigree = request.getParameter("pedigree");
+		String output = "";
 
 		String query_url = "http://localhost:12347/predict";
-		String json = "{\"Pregnancies\": " + pregnancies + ", \"Glucose\": " + glucose + ", \"BloodPressure\": " + bp + ", \"BMI\": " + bmi + ", \"DiabetesPedigreeFunction\": " + pedigree + "}";
+		String json = "[{\"area_worst\": " + pregnancies + ", \"radius_worst\": " + glucose + ", \"perimeter_worst\": " + bp + ", \"concave points_mean\": " + bmi + ", \"concave points_worst\": " + pedigree + "}]";
 		
 		try {
 			URL url = new URL(query_url);
@@ -69,15 +71,41 @@ public class SendJSON extends HttpServlet {
 			InputStream in = new BufferedInputStream(conn.getInputStream());
 			String result = IOUtils.toString(in, "UTF-8");
 			System.out.println(result);
-			System.out.println("result after Reading JSON Response");
 			JSONObject myResponse = new JSONObject(result);
-			System.out.println("jsonrpc- " + myResponse.getString("jsonrpc"));
-			System.out.println("id- " + myResponse.getInt("id"));
-			System.out.println("result- " + myResponse.getString("result"));
+			request.setAttribute("result", myResponse.getString("prediction"));
+			request.getRequestDispatcher("predictor.jsp").forward(request, response);
 			in.close();
 			conn.disconnect();
+			response.sendRedirect("predictor.jsp");
+			System.out.println(myResponse.getString("prediction"));
+			if (myResponse.getString("prediction") != null){
+				if (myResponse.getString("prediction").equals("[1]")) {
+					output = "Malignant";
+					} else if (myResponse.getString("prediction").equals("[0]")) {
+						output = "benign";
+					} 
+				}
 		} catch (Exception e) {
 			System.out.println(e);
+		}
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection conn = DriverManager.getConnection("jdbc:mysql://" + DatabaseInfo.DB_URL + "/" + DatabaseInfo.DB_NAME + "", DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS); 
+			Statement stmt = conn.createStatement();
+			int i = stmt.executeUpdate(
+					"INSERT INTO `prediction`(`concave_points_mean`, `radius_worst`, `perimeter_worst`, `area_worst`, `concave_points_worst`, `result`) VALUES ('"
+							+ bmi + "','" + glucose + "','" + bp + "','" + pregnancies + "','" + pedigree + "','" + output
+							+ "')");
+			if (i > 0) {
+				response.sendRedirect("usermanagement.jsp");
+			} else {
+				response.sendRedirect("error.jsp");
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }

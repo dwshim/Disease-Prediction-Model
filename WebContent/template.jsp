@@ -3,12 +3,20 @@
 	<div class="list-group list-group-flush">
 	<a href="home.jsp"
 			class="list-group-item list-group-item-action bg-light">Home</a>
-		<a href="predictor.jsp"
-			class="list-group-item list-group-item-action bg-light">Predictor</a>
-		<%
+			<%
 			String role = (String) session.getAttribute("role");
-			if (role != null) {
-				if (role.equals("System Administrator") || role.equals("Patient Administrator")) {
+			if(role != null) {
+				if(!role.equals("Patient Administrator")){
+					%>
+					<a href="predictor.jsp"
+					class="list-group-item list-group-item-action bg-light">Predictor</a>
+				<% } %>
+			
+			
+		
+		<%
+			
+				if (role.equals("System Administrator") || role.equals("Patient Administrator") || role.equals("Hospital Specialist")) {
 		%>
 		<a href="patient.jsp"
 			class="list-group-item list-group-item-action bg-light">Patient List</a>
@@ -18,6 +26,8 @@
 		%>
 		<a href="usermanagement.jsp"
 			class="list-group-item list-group-item-action bg-light">User Management </a>
+		<a href="datavisualize.jsp"
+			class="list-group-item list-group-item-action bg-light">Data Visualization </a>
 		<%
 			}
 			}

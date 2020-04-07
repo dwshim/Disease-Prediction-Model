@@ -76,11 +76,11 @@
 					<table class="table">
 						<thead>
 							<tr>
-								<th scope="col">BMI</th>
-								<th scope="col">Glucose Level</th>
-								<th scope="col">Blood Pressure</th>
-								<th scope="col">Pregnancies</th>
-								<th scope="col">Pedigree</th>
+								<th scope="col">Concave Points Mean</th>
+								<th scope="col">Radius Worst</th>
+								<th scope="col">Perimeter Worst</th>
+								<th scope="col">Area Worst</th>
+								<th scope="col">Concave Points Worst</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -104,7 +104,9 @@
 					</table>
 
 					<button class="btn btn-primary">Edit Data</button>
+					<button class="btn btn-secondary" formaction="predictor.jsp?id=<%out.print(id);%>">Run Prediction</button>
 				</form>
+				
 			</div>
 		</div>
 

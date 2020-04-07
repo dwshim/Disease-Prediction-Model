@@ -38,12 +38,13 @@
 		<!-- Page Content -->
 			<div class="container-fluid">
 				<h1 class="mt-4">List of Patient</h1>
-				<form method="GET" action="searchresult.jsp">
+				<form method="POST" action="searchresult.jsp">
 					<input type="text"
 							class="form-control" name="searchpatient" id="searchpatient"
-							placeholder="Search by First Name" required>
+							placeholder="Search by First Name">
 							<br>
-							<button class="btn btn-info">Search</button>
+							<button class="btn btn-info" name ="submitsearch">Search</button>
+							<button class="btn btn-info" formaction="chart.jsp" style="float: right;">See population</button>
 				</form>
 				<br>
 				<table class="table">

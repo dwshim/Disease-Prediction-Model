@@ -8,6 +8,8 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="com.predictive.DatabaseInfo"%>
+<%@page import="java.math.RoundingMode"%>
+<%@page import="java.text.DecimalFormat"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +36,7 @@
 		}
 		Gson gsonObj = new Gson();
 		Map<Object, Object> map = null;
-		HashMap<String, String> hm = new HashMap<String, String>();
+		HashMap<String, Integer> hm = new HashMap<String, Integer>();
 
 		List<Map<Object, Object>> list = new ArrayList<Map<Object, Object>>();
 	%>
@@ -54,7 +56,7 @@
 				<div id="chartContainer" style="height: 450px; width: 100%;"></div>
 
 				<%
-					/* try {
+					 try {
 						Class.forName(driverName);
 					} catch (ClassNotFoundException e) {
 						e.printStackTrace();
@@ -70,23 +72,23 @@
 								"jdbc:mysql://" + DatabaseInfo.DB_URL + "/" + DatabaseInfo.DB_NAME + "",
 								DatabaseInfo.DB_USERNAME, DatabaseInfo.DB_PASS);
 						statement = connection.createStatement();
-						String sql = "SELECT department FROM `patient`";
+						String sql = "SELECT result FROM `prediction`";
 					
 						resultSet = statement.executeQuery(sql);
 						int count = 0;
 						while (resultSet.next()) {
 							count++;
-							if (hm.containsKey(resultSet.getString("department"))) {
-								hm.put(resultSet.getString("department"), hm.get(resultSet.getString("department")) + 1);
+							if (hm.containsKey(resultSet.getString("result"))) {
+								hm.put(resultSet.getString("result"), hm.get(resultSet.getString("result")) + 1);
 							} else {
-								hm.put(resultSet.getString("department"), 1.0);
+								hm.put(resultSet.getString("result"), 1);
 							}
 						}
 					
-						for (Map.Entry<String, Double> z : hm.entrySet()) {
+						for (Map.Entry<String, Integer> z : hm.entrySet()) {
 							map = new HashMap<Object, Object>();
 							map.put("label", z.getKey());
-							map.put("y", Math.round(z.getValue() / count * 100));
+							map.put("y", z.getValue());
 							list.add(map);
 						}
 					} catch (Exception e) {
@@ -94,15 +96,6 @@
 					}
 					
 					connection.close();
-					*/
-					map = new HashMap<Object, Object>();
-					map.put("label", "Benign");
-					map.put("y", 30);
-					list.add(map);
-					map = new HashMap<Object, Object>();
-					map.put("label", "Malignant");
-					map.put("y", 12);
-					list.add(map);
 					String dataPoints = gsonObj.toJson(list);
 				%>
 

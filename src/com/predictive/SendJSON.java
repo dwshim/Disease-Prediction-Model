@@ -70,14 +70,16 @@ public class SendJSON extends HttpServlet {
 			// read the response
 			InputStream in = new BufferedInputStream(conn.getInputStream());
 			String result = IOUtils.toString(in, "UTF-8");
-			System.out.println(result);
 			JSONObject myResponse = new JSONObject(result);
 			request.setAttribute("result", myResponse.getString("prediction"));
+			request.setAttribute("area_worst", pregnancies);
+			request.setAttribute("radius_worst", glucose);
+			request.setAttribute("perimeter_worst", bp);
+			request.setAttribute("concave_points_mean", bmi);
+			request.setAttribute("concave_points_worst", pedigree);
 			request.getRequestDispatcher("predictor.jsp").forward(request, response);
 			in.close();
 			conn.disconnect();
-			response.sendRedirect("predictor.jsp");
-			System.out.println(myResponse.getString("prediction"));
 			if (myResponse.getString("prediction") != null){
 				if (myResponse.getString("prediction").equals("[1]")) {
 					output = "Malignant";
@@ -97,11 +99,6 @@ public class SendJSON extends HttpServlet {
 					"INSERT INTO `prediction`(`concave_points_mean`, `radius_worst`, `perimeter_worst`, `area_worst`, `concave_points_worst`, `result`) VALUES ('"
 							+ bmi + "','" + glucose + "','" + bp + "','" + pregnancies + "','" + pedigree + "','" + output
 							+ "')");
-			if (i > 0) {
-				response.sendRedirect("usermanagement.jsp");
-			} else {
-				response.sendRedirect("error.jsp");
-			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

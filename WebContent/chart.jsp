@@ -8,6 +8,8 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="com.predictive.DatabaseInfo"%>
+<%@page import="java.math.RoundingMode"%>
+<%@page import="java.text.DecimalFormat"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,6 +18,7 @@
 <title>Editor</title>
 <%
 	String driverName = "com.mysql.jdbc.Driver";
+	DecimalFormat df2 = new DecimalFormat("#.##");
 %>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -86,7 +89,7 @@
 						for (Map.Entry<String, Double> z : hm.entrySet()) {
 							map = new HashMap<Object, Object>();
 							map.put("label", z.getKey());
-							map.put("y", Math.round(z.getValue() / count * 100));
+							map.put("y", df2.format(z.getValue() / count * 100));
 							list.add(map);
 						}
 					} catch (Exception e) {

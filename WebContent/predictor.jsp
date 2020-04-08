@@ -120,29 +120,41 @@
 
 						connection.close();
 					} else {
+						String a = (String) request.getAttribute("area_worst");
+						String b = (String) request.getAttribute("radius_worst");
+						String c = (String) request.getAttribute("perimeter_worst");
+						String d = (String) request.getAttribute("concave_points_mean");
+						String e = (String) request.getAttribute("concave_points_worst");
+						if(a == null || b == null || c == null || d == null || e == null) {
+							a = "";
+							b = "";
+							c = "";
+							d = "";
+							e = "";
+						}
 				%>
 
 				<form method="POST" action="SendJSON">
 					<div class="form-group">
 						<input type="text" class="form-control" id="bmi" name="bmi"
-							placeholder="Concave Points Mean" required>
+							placeholder="Concave Points Mean" value="<%=a%>" required>
 					</div>
 
 					<div class="form-group">
 						<input type="text" class="form-control" name="glucose"
-							id="glucose" placeholder="Radius Worst" required>
+							id="glucose" placeholder="Radius Worst" value="<%=b%>" required>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" id="bp" name="bp"
-							placeholder="Perimeter Worst" required>
+							placeholder="Perimeter Worst" value="<%=c%>" required>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" id="pregnancies"
-							name="pregnancies" placeholder="Area Worst" required>
+							name="pregnancies" placeholder="Area Worst" value="<%=d%>" required>
 					</div>
 					<div class="form-group">
 						<input type="text" class="form-control" id="pedigree"
-							name="pedigree" placeholder="Concave Points Worst" required>
+							name="pedigree" placeholder="Concave Points Worst" value="<%=e%>" required>
 					</div>
 
 					<div class="form-group">
